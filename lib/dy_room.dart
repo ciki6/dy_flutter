@@ -1,10 +1,15 @@
+/*
+ * @Author: LuXiaoFu 
+ * @Date: 2019-11-21 00:12:10 
+ * @Last Modified by: LuXiaoFu
+ * @Last Modified time: 2019-11-21 00:14:55
+ */
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'bloc.dart';
-import 'base.dart' show DYBase;
-import 'config.dart' as config;
+import 'base.dart' show DYBase, DYhttp;
 
 class DyRoomPage extends StatefulWidget {
   final arguments;
@@ -21,6 +26,17 @@ class _DyRoomPageState extends State<DyRoomPage> with DYBase {
   _DyRoomPageState(this.routeProp);
 
   CounterBloc counterBloc;
+
+  List msgData = [];
+
+  @override
+  void initState() {
+    DYhttp.post('/dy/flutter/msgData').then((res) {
+      setState(() {
+        msgData = res['data'];
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +97,7 @@ class _DyRoomPageState extends State<DyRoomPage> with DYBase {
                 bottom: BorderSide(color: Color(0xffff5d23), width: dp(3))),
           ),
           child: Text(
-            '弹幕',
+            '弹幕($count)',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xffff5d23),
@@ -93,7 +109,7 @@ class _DyRoomPageState extends State<DyRoomPage> with DYBase {
           padding: EdgeInsets.only(top: dp(12)),
           width: dp(60),
           child: Text(
-            '主播$count',
+            '主播',
             textAlign: TextAlign.center,
           ),
         )
@@ -118,10 +134,10 @@ class _DyRoomPageState extends State<DyRoomPage> with DYBase {
     );
   }
 
-  _chatMsg() {
+  List<Widget> _chatMsg() {
     var msgList = List<Widget>();
 
-    config.msgData.forEach((item) {
+    msgData.forEach((item) {
       var isAdmin = item['lv'] > 0;
       var msgBoart = <Widget>[
         RichText(
