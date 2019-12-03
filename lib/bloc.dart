@@ -3,6 +3,7 @@
  * @Date: 2019-11-20 14:10:19 
  * @Last Modified by:   LuXiaoFu 
  * @Last Modified time: 2019-11-20 14:10:19 
+ * @Description bloc全局状态管理
  */
 
 import 'package:bloc/bloc.dart';

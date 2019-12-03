@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc.dart';
-import 'dy_index.dart';
-import 'dy_room.dart';
+import 'dy_index/index.dart';
+import 'dy_room/index.dart';
 
 class DyApp extends StatelessWidget {
   //动态路由传递参数

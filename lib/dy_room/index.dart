@@ -4,12 +4,15 @@
  * @Last Modified by: LuXiaoFu
  * @Last Modified time: 2019-11-21 00:14:55
  */
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'bloc.dart';
-import 'base.dart' show DYBase, DYhttp;
+import '../bloc.dart';
+import '../base.dart' show DYBase, DYhttp;
+import 'animate.dart' show Gift;
 
 class DyRoomPage extends StatefulWidget {
   final arguments;
@@ -28,14 +31,59 @@ class _DyRoomPageState extends State<DyRoomPage> with DYBase {
   CounterBloc counterBloc;
 
   List msgData = [];
+  List<Widget> giftBannerView = List<Widget>();
 
-  @override
+  Timer giftTimer, msgTimer;
+
+  ScrollController _chatController = ScrollController();
   void initState() {
+    super.initState();
     DYhttp.post('/dy/flutter/msgData').then((res) {
-      setState(() {
-        msgData = res['data'];
+      var msgDataSource = res['data'];
+      var i = 0;
+      msgTimer = Timer.periodic(Duration(milliseconds: 200), (timer) {
+        if (i > 60) {
+          _chatController.jumpTo(_chatController.position.maxScrollExtent);
+          msgTimer.cancel();
+          return;
+        }
+        setState(() {
+          msgData.add(msgDataSource[Random().nextInt(msgDataSource.length)]);
+        });
+        _chatController.jumpTo(_chatController.position.maxScrollExtent);
+        i++;
       });
     });
+
+    DYhttp.get('/dy/flutter/giftData').then((res) {
+      var giftData = res['data'];
+      giftTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (giftTimer.tick > giftData.length) {
+          giftTimer.cancel();
+          return;
+        }
+        Gift.add(giftData[giftTimer.tick - 1], () {
+          setState(() {
+            giftBannerView = Gift.bannerQueue;
+          });
+        });
+      });
+    });
+  }
+
+  @override
+  void didUpdateWidget(oldWidget) {
+    print(oldWidget);
+    _chatController.jumpTo(_chatController.position.maxScrollExtent);
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void dispose() {
+    //路由销毁时需要释放动画资源
+    Gift.bannerQueue = <Widget>[];
+    giftTimer?.cancel();
+    msgTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -126,9 +174,15 @@ class _DyRoomPageState extends State<DyRoomPage> with DYBase {
               top: BorderSide(color: Color(0xffeeeeee), width: dp(1)),
               bottom: BorderSide(color: Color(0xffeeeeee), width: dp(1))),
         ),
-        child: ListView(
-          padding: EdgeInsets.all(dp(10)),
-          children: _chatMsg(),
+        child: Stack(
+          children: <Widget>[
+            ListView(
+              controller: _chatController,
+              padding: EdgeInsets.all(dp(10)),
+              children: _chatMsg(),
+            ),
+            ...giftBannerView,
+          ],
         ),
       ),
     );

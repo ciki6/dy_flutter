@@ -3,6 +3,7 @@
  * @Date: 2019-11-20 14:11:23 
  * @Last Modified by: LuXiaoFu
  * @Last Modified time: 2019-11-21 00:11:27
+ * @Description 首页轮播图/视频列表
  */
 
 import 'package:flutter/material.dart';
@@ -10,8 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
-import 'bloc.dart';
-import 'base.dart' show DYBase, DYhttp, DYio;
+import '../bloc.dart';
+import '../base.dart' show DYBase, DYhttp, DYio;
 
 class DyIndexPage extends StatefulWidget {
   final arguments;
@@ -39,6 +40,7 @@ class _DyIndexPageState extends State<DyIndexPage> with DYBase {
   /*---- 生命周期 ----*/
   @override
   void initState() {
+     super.initState();
    DYio.getTempFile('navList').then((dynamic data) {
      if(data == null)
       setState(() {

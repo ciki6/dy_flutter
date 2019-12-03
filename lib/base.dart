@@ -3,6 +3,7 @@
  * @Date: 2019-11-20 14:09:42 
  * @Last Modified by: LuXiaoFu
  * @Last Modified time: 2019-11-20 14:10:04
+ * @Description 抽象类与通用类封装
  */
 
 library base;
