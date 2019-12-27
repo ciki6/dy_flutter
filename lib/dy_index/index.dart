@@ -40,13 +40,13 @@ class _DyIndexPageState extends State<DyIndexPage> with DYBase {
   /*---- 生命周期 ----*/
   @override
   void initState() {
-     super.initState();
-   DYio.getTempFile('navList').then((dynamic data) {
-     if(data == null)
-      setState(() {
-        navList = data['data'];
-        _getLiveData(navList[0]);
-      });
+    super.initState();
+    DYio.getTempFile('navList').then((dynamic data) {
+      if (data == null)
+        setState(() {
+          navList = data['data'];
+          _getLiveData(navList[0]);
+        });
     });
     _getNav();
     _getSwiperPic();
@@ -54,7 +54,7 @@ class _DyIndexPageState extends State<DyIndexPage> with DYBase {
 
   /*---- 网络请求 ----*/
   //获取导航列表
-  void _getNav(){
+  void _getNav() {
     DYhttp.get(
       '/dy/flutter/nav',
       cacheName: 'navList',
@@ -77,12 +77,7 @@ class _DyIndexPageState extends State<DyIndexPage> with DYBase {
 
   //正在直播列表
   void _getLiveData(String i) {
-    DYhttp.post(
-      '/dy/flutter/liveData',
-      param: {
-        'typeName': i
-      }
-    ).then((res) {
+    DYhttp.post('/dy/flutter/liveData', param: {'typeName': i}).then((res) {
       setState(() {
         liveData = res['data'];
       });
@@ -179,7 +174,7 @@ class _DyIndexPageState extends State<DyIndexPage> with DYBase {
           ),
           // 搜索区域容器
           Expanded(
-          flex: 1,
+            flex: 1,
             child: Container(
               width: dp(150),
               height: dp(30),
@@ -295,19 +290,21 @@ class _DyIndexPageState extends State<DyIndexPage> with DYBase {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.width / 1.7686,
-      child: swiperPic.length < 1 ? null : Swiper(
-        itemBuilder: _swiperBuilder,
-        itemCount: swiperPic.length,
-        pagination: SwiperPagination(
-            builder: DotSwiperPaginationBuilder(
-          color: Color.fromRGBO(0, 0, 0, .2),
-          activeColor: Color(0xfffa7122),
-        )),
-        control: SwiperControl(),
-        scrollDirection: Axis.horizontal,
-        autoplay: true,
-        onTap: (index) => print('this is $index click'),
-      ),
+      child: swiperPic.length < 1
+          ? null
+          : Swiper(
+              itemBuilder: _swiperBuilder,
+              itemCount: swiperPic.length,
+              pagination: SwiperPagination(
+                  builder: DotSwiperPaginationBuilder(
+                color: Color.fromRGBO(0, 0, 0, .2),
+                activeColor: Color(0xfffa7122),
+              )),
+              control: SwiperControl(),
+              scrollDirection: Axis.horizontal,
+              autoplay: true,
+              onTap: (index) => print('this is $index click'),
+            ),
     );
   }
 
