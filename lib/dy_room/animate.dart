@@ -37,7 +37,7 @@ class GiftBanner extends StatefulWidget with DYBase {
 
   @override
   _GiftBannerState createState() => _GiftBannerState(
-      giftInfo: giftInfo, child: child, queueLength: queueLength, cb: cb);
+      giftInfo: giftInfo, child: child, queueLength: queueLength);
 }
 
 class _GiftBannerState extends State<GiftBanner>
